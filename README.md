@@ -27,7 +27,7 @@ DB_USERNAME=
 DB_PASSWORD=
 
 
-#Accessing the API
+# Accessing the API
 
 Available APIs:
 

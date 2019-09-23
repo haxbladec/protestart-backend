@@ -26,7 +26,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'email', 'api_token', 'email_verified_at'
     ];
 
     /**
@@ -37,4 +37,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getCreatedAtAttribute($value)
+    {
+        return strtotime($value);;
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return strtotime($value);
+    }
+    
+    public function arts()
+    {
+        return $this->hasMany('App\Art');
+    }
 }

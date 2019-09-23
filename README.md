@@ -25,3 +25,15 @@ DB_PORT=
 DB_DATABASE=
 DB_USERNAME=
 DB_PASSWORD=
+
+
+#Accessing the API
+
+Available APIs:
+
+POST /api/users/register
+POST /api/users/login
+GET  /api/users/is_alive
+GET  /api/arts
+GET  /api/arts/{art_id}
+POST /api/arts

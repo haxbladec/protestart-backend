@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 use App\Art;
 use App\User;
+use App\Tag;
 
 class ArtController extends Controller
 {
@@ -16,7 +18,8 @@ class ArtController extends Controller
         return Validator::make($data, [
             'title' => ['required', 'string', 'max:255', 'unique:arts',],
             'file' => ['required', 'string',],
-            'caption'=> ['string']
+            'caption'=> ['string'],
+            'tags'=>['array', 'max:10']
         ]);
     }
 
@@ -29,6 +32,19 @@ class ArtController extends Controller
             'file'=> $data['file'],
         ]);
     }
+
+    protected function createTags(Request $request)
+    {
+        $tags = [];
+        foreach ($request['tags'] as $tag_name){
+            $tag = Tag::where("name", $tag_name)->first();
+            if ($tag===null){
+                $tag = Tag::create(['name'=>$tag_name]);
+            }
+            $tags[] = $tag;
+        }
+        return $tags;
+    }
     //
     public function create(Request $request)
     {
@@ -40,6 +56,11 @@ class ArtController extends Controller
 
         $user = Auth::user();
         $art = $this->createArt($request, $user);
+        if ($request['tags'])
+        {
+            $tags = $this->createTags($request);
+            $art->tags()->saveMany($tags);
+        }
         return $this->sendResponse(array(
             "id" => $art->id
         ));
@@ -51,13 +72,23 @@ class ArtController extends Controller
         $page = $request->input('page', 0);
         $sort_by = $request->input('sort_by', 'created_at');
         $sort_order = $request->input('sort_order', 'desc');
-        $arts = Art::limit($page_size)->skip($page)->orderBy($sort_by, $sort_order)->get();
+        $art_query = Art::limit($page_size)->skip($page)->orderBy($sort_by, $sort_order);
+        //query builder for tags search
+        if ($request['tags'] !== null){
+            $art_query->whereHas('tags', function(Builder $query) use ($request){
+                $query->where('name', $request['tags'][0]);
+                foreach ($request['tags'] as $tag){
+                    $query->orWhere('name', $tag);
+                }
+            });
+        }
+        $arts = $art_query->get();
         return $this->sendResponse($arts);
     }
 
     public function get($id, Request $request)
     {
-        $art = Art::find($id);
+        $art = Art::with('author', 'tags')->find($id);
         return $this->sendResponse($art);
     }
 }

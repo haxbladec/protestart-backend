@@ -24,6 +24,18 @@ At the moment, the following services configuration are needed:
 * DB_USERNAME=
 * DB_PASSWORD=
 
+## Initial setup
+
+`composer require laravel/passport`
+
+`php artisan migrate`
+
+`php artisan passport:install`
+
+## Everytime after pulling 
+
+`php artisan migrate`
+
 
 # Accessing the API
 

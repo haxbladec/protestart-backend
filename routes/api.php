@@ -23,3 +23,4 @@ Route::middleware('auth:api')->get('/users/is_alive', function(Request $request)
 });
 
 Route::middleware('auth:api')->post('/arts', 'ArtController@create');
+Route::middleware('auth:api')->post('/arts/upload', 'ArtController@upload');

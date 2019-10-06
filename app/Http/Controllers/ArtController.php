@@ -23,7 +23,12 @@ class ArtController extends Controller
         ]);
     }
 
-
+    protected function file_validator(array $data)
+    {
+        return Validator::make($data, [
+            'file'=> ['file', 'required','mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4,video/MP2T,application/x-mpegURL,image/jpeg,image/jpg,image/png,image/gif']
+        ]);
+    }
     protected function createArt(Request $data, User $user)
     {
         return $user->arts()->create([
@@ -90,5 +95,18 @@ class ArtController extends Controller
     {
         $art = Art::with('author', 'tags')->find($id);
         return $this->sendResponse($art);
+    }
+
+    public function upload(Request $request)
+    {
+        $validator = $this->file_validator($request->all());
+        if ($validator->fails())
+        {
+            return $this->sendError("Validation Error", $validator->errors(), 400);
+        }
+        $path = $request->file('file')->store('public/artwork');
+        return $this->sendResponse(array(
+            'file'=>$path
+        ));
     }
 }

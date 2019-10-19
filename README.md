@@ -1,5 +1,9 @@
 # protestart-backend
 
+# FILE UPLOAD SETUP
+
+`ln -s path/to/project/storage/app/public path/to/project/public/public`
+
 # Setup
 
 Follow the official laravel installation guide:
@@ -52,3 +56,5 @@ GET  /api/arts
 GET  /api/arts/{art_id}
 
 POST /api/arts
+
+POST /api/arts/upload

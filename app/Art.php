@@ -8,7 +8,7 @@ class Art extends Model
 {
     //
     protected $fillable = [
-        "title", "caption", "file"
+        "title", "caption", "file", "user_id"
     ];
 
     protected $hidden = [

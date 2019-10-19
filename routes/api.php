@@ -17,10 +17,12 @@ Route::post('/users/register', 'Auth\RegisterController@register');
 Route::post('/users/login', 'Auth\LoginController@login');
 Route::get('/arts', 'ArtController@index');
 Route::get('/arts/{id}', 'ArtController@get');
+Route::post('/arts', 'ArtController@create');
+Route::post('/arts/upload', 'ArtController@upload');
 
 Route::middleware('auth:api')->get('/users/is_alive', function(Request $request){
     return response()->json(array("is_alive"=>true), 200);
 });
 
-Route::middleware('auth:api')->post('/arts', 'ArtController@create');
-Route::middleware('auth:api')->post('/arts/upload', 'ArtController@upload');
+// Route::middleware('auth:api')->post('/arts', 'ArtController@create');
+// Route::middleware('auth:api')->post('/arts/upload', 'ArtController@upload');

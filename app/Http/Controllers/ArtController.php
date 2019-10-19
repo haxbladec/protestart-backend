@@ -29,12 +29,13 @@ class ArtController extends Controller
             'file'=> ['file', 'required','mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4,video/MP2T,application/x-mpegURL,image/jpeg,image/jpg,image/png,image/gif']
         ]);
     }
-    protected function createArt(Request $data, User $user)
+    protected function createArt(Request $data)
     {
-        return $user->arts()->create([
+        return Art::create([
             'title' => $data['title'],
             'caption' => $data['caption'],
             'file'=> $data['file'],
+            "user_id"=>0
         ]);
     }
 
@@ -59,8 +60,8 @@ class ArtController extends Controller
             return $this->sendError("Validation Error", $validator->errors(), 400);
         }
 
-        $user = Auth::user();
-        $art = $this->createArt($request, $user);
+        // $user = Auth::user();
+        $art = $this->createArt($request);
         if ($request['tags'])
         {
             $tags = $this->createTags($request);

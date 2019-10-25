@@ -78,7 +78,7 @@ class ArtController extends Controller
         $page = $request->input('page', 0);
         $sort_by = $request->input('sort_by', 'created_at');
         $sort_order = $request->input('sort_order', 'desc');
-        $art_query = Art::limit($page_size)->skip($page)->orderBy($sort_by, $sort_order);
+        $art_query = Art::limit($page_size)->skip($page*$page_size)->orderBy($sort_by, $sort_order);
         //query builder for tags search
         if ($request['tags'] !== null){
             $art_query->whereHas('tags', function(Builder $query) use ($request){
